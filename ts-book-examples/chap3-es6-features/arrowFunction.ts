@@ -13,4 +13,4 @@ const func2 = () => {
 
 console.log(func()) //func
 console.log(func1()) //undefined { name: 'dave' }
-console.log(func2())
+console.log(func2()) //20
