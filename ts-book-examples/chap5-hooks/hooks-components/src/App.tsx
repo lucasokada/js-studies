@@ -1,11 +1,7 @@
-import { useReducer } from "react";
+import { useCallback, useReducer, useState } from "react";
 import Greeting from "./GreetingFunctional";
 
 function App() {
-  /*
-  A função reducer tem parâmetros any, já que essa tenta tratar diferentes tipos de ações,
-  retornando um novo objeto de estado apropriado para cada tipo.
-   */
   const reducer = (state: any, action: any) => {
     console.log("enteredNameReducer");
     switch (action.type) {
@@ -33,22 +29,45 @@ function App() {
   };
 
   const [{ message, enteredName }, dispatch] = useReducer(
-    //estudar o hook useReducer!
     reducer,
     initialState
   );
+  const [startCount, setStartCount] = useState(0);
+  const [count, setCount] = useState(0);
+  const setCountCallback = useCallback(() => {
+    const inc =
+      count + 1 > startCount ? count + 1 : Number(count + 1) + startCount;
+    setCount(inc);
+  }, [count, startCount]);
+  const onWelcomeBtnClick = () => {
+    setCountCallback();
+  };
 
-  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //estudar o dispatch
-    dispatch({ type: "enteredName", payload: e.target.value });
-    dispatch({ type: "message", payload: e.target.value });
+  const onChangeStartCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStartCount(Number(e.target.value));
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <input value={enteredName} onChange={onChangeName} />
-        <Greeting message={message} />
+        <Greeting
+          message={message}
+          enteredName={enteredName}
+          greetingDispatcher={dispatch}
+        />
+        <div style={{ marginTop: "10px" }}>
+          <label>Enter a number and we'll increment it</label>
+          <br />
+          <input
+            value={startCount}
+            onChange={onChangeStartCount}
+            style={{ width: ".75rem" }}
+          />
+          &nbsp;
+          <label>{count}</label>
+          <br />
+          <button onClick={onWelcomeBtnClick}>Increment count</button>
+        </div>
       </header>
     </div>
   );
