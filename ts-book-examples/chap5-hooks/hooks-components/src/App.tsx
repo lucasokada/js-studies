@@ -1,5 +1,6 @@
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import Greeting from "./GreetingFunctional";
+import ListCreator, { ListItem } from "./ListCreator";
 
 function App() {
   const reducer = (state: any, action: any) => {
@@ -32,6 +33,7 @@ function App() {
     reducer,
     initialState
   );
+
   const [startCount, setStartCount] = useState(0);
   const [count, setCount] = useState(0);
   const setCountCallback = useCallback(() => {
@@ -39,6 +41,16 @@ function App() {
       count + 1 > startCount ? count + 1 : Number(count + 1) + startCount;
     setCount(inc);
   }, [count, startCount]);
+  const [listItems, setListItems] = useState<Array<ListItem>>();
+
+  useEffect(() => {
+    const li = [];
+    for (let i = 0; i < count; i++) {
+      li.push({ id: i });
+    }
+    setListItems(li);
+  }, [count]);
+
   const onWelcomeBtnClick = () => {
     setCountCallback();
   };
@@ -46,6 +58,8 @@ function App() {
   const onChangeStartCount = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartCount(Number(e.target.value));
   };
+
+  console.log("App.tsx render");
 
   return (
     <div className="App">
@@ -55,6 +69,7 @@ function App() {
           enteredName={enteredName}
           greetingDispatcher={dispatch}
         />
+
         <div style={{ marginTop: "10px" }}>
           <label>Enter a number and we'll increment it</label>
           <br />
@@ -67,6 +82,10 @@ function App() {
           <label>{count}</label>
           <br />
           <button onClick={onWelcomeBtnClick}>Increment count</button>
+        </div>
+
+        <div>
+          <ListCreator listItems={listItems} />
         </div>
       </header>
     </div>
