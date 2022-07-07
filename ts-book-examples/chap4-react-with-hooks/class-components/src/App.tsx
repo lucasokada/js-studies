@@ -1,8 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Greeting from "./Greeting";
-
 class App extends React.Component {
   constructor(props:any) {
     super(props);
